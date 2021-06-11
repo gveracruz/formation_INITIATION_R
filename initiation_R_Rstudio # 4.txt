@@ -1,0 +1,254 @@
+
+                  
+
+
+                  # INTRODUCTION : 
+                  # LES PREMIERES COMMANDES, LES FONCTIONS, LES PACKAGES
+
+    
+      # LES PREMIERES COMMANDES
+
+
+# Faire des additions, des mutiplications, etc, en utilisant les opérateurs mathématiques de base.
+
+        # + , - , * , /         
+        # ^                     passage à la puissance
+
+
+3+8
+
+8 - 12
+
+14 * 25
+
+-3/10
+
+# On remarquera que R est anglo-saxon. Les nombres sont donc saisies « à l’anglaise », c’est-à-dire en
+# utilisant le point ( . ) comme séparateur pour les décimales.
+
+      
+
+      # LES FONCTIONS : Ce sont des outils permettant de faire une action ou une opération.
+
+
+      
+# Les fonctions sont composées d'un nom et, entre parenthèses, d'une série d'éléments appelés "arguments" de la fonction.
+# Exemple d'une fonction simple qui fait de l'addition:
+
+sum(1,4,3)
+
+
+      # LES PACKAGES
+
+
+# Ce sont des boites à outils (fonctions). Comme par exemple une boite contennant diverses outils de bricolage.
+
+
+
+
+###############################################################################################################################################
+
+
+
+                  
+                  #   LES OBJECTS R :
+
+                  #   LES VARIABLES, LES VECTEURS, LES LISTES, LES FACTEURS, LES DATES, LES MATRICES / TABLEAUX
+
+
+
+     # 1. LES VARIABLES
+ 
+
+
+     # L'ASSIGNATION d'UNE VALEUR A UNE VARIABLE
+
+
+
+# Les trois façons de faire l'assignation.
+
+x <- 2 
+
+x = 2
+
+2 -> x
+
+x + 8
+
+
+z <- "J'espère que mes explications sont assez claires"
+
+z
+
+y <- 2+1
+
+y
+
+(y <- 2+1)
+
+
+      # Convention de nommage de variables (sensible à la case; pas commencer par un chiffre; pas d'espace)
+
+
+# a) Tout en minuscule : nomvariable ;
+
+# b) Séparation par un point : nom.variable ;
+
+# c) Séparation par un trait de soulignement : nom_variable ;
+
+# d) LowerCamelCase, avec la première lettre en minuscule : nomVariable ;
+
+# e) PascalCase, avec la première lettre en majuscule : NomVariable.
+
+
+
+
+        # 2. LES VECTEURS 
+
+
+
+
+mon_premier_vecteur <- c(167, 192, 173, 174, 172, 167, 171, 185, 163, 170)
+
+mon_premier_vecteur
+
+mon_premier_vecteur + 20
+
+mon_premier_vecteur/100
+
+mon_premier_vecteur^2
+
+
+reponse <- c("Bac+2", "Bac", "CAP", "Bac", "Bac", "CAP", "BEP")
+
+reponse
+
+
+
+
+      # LES FONCTIONS : Ce sont des outils utilisés pour faire une ou plusieurs actions / opérations
+
+      # LES FONCTIONS UTILISES SUR LES VECTEURS
+
+
+
+
+fonct <- c(167, 192, 173, 174, 172, 167, 171, 185, 163, 170) 
+
+length(fonct)
+
+mean(fonct)
+
+mean(fonct, na.rm = TRUE)
+
+
+
+var(fonct)
+
+min(fonct)
+
+max(fonct)
+
+sd(fonct)
+
+ :  # Génère une séquence de nombres. 1:4 équivaut à c(1,2,3,4)
+
+1:10
+
+
+
+      # LES OBJECTS EN MEMOIRE
+
+
+
+
+# Pour lister les éléments de la session R stockés en mémoire de l’ordinateur, il faut appeler la
+# fonction ls() :
+
+ls()
+
+      # Modification, suppression
+
+
+# Il est important de noter que l’assignation du contenu d’un objet à un autre objet permet
+# d’obtenir deux objets distincts. Ainsi, si un des deux objets est modifié, cela n’affecte pas
+# l’autre.
+
+premier_objet <- 2+1
+
+second_objet <- premier_objet # On assigne la valeur de premier_objet à second_objet
+
+premier_objet <- 2+2 # On change la valeur de premier_objet
+
+# Puis on affiche le contenu des deux objets :
+
+premier_objet # Le résultat doit être 4
+
+second_objet # Le résultat doit être 3
+
+
+
+# Pour supprimer un objet, il faut utiliser la fonction rm() :
+
+rm(premier_objet) # On le supprime
+
+premier_objet # Son affichage provoque un message d'erreur
+
+
+
+
+          # LES PACKAGES
+
+
+
+
+# Les fonctions de base de R sont contenues dans un package nommé base. Celui-ci est chargé
+# automatiquement à l’ouverture de R, en même temps qu’une poignée d’autres packages. 
+ 
+# Les packages sont des jeux de fonctions, accompagnés de fichiers d’aides, parfois de jeux de données, qui sont mis
+# à disposition des utilisateurs. 
+
+# La liste des packages chargés en mémoire par défaut s’obtient par l’instruction suivante :
+  
+getOption("defaultPackages")
+
+# Pour installer un package :
+
+install.packages("questionr", dep = TRUE)
+
+# Pour charger le package en mémoire et ainsi avoir accès aux fonctions que celui-ci contient :
+
+library(questionr)
+
+# Puis nous allons indiquer à R que nous souhaitons accéder au jeu de données hdv2003 à l’aide de la fonction data :
+
+data(hdv2003)
+
+
+d <- hdv2003
+
+d
+
+View(d)
+
+
+
+
+        # L'AIDE DES FONCTIONS
+
+
+
+
+ # L’accès aux fichiers d’aide pour une fonction dont on connaît le nom peut se faire de plusieurs manières :
+
+ ?log # Première manière
+
+help(log) # Seconde manière
+
+help("log") # Troisième manière
+
+ ?format
+
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------
