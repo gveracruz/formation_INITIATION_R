@@ -1,0 +1,52 @@
+
+Initiation à R et Rstudio # 3 : 
+Comment établir le répertoire de travail, copier le chemin d’un dossier, avoir la liste des fichiers à l’intérieur du répertoire de travail, etc.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce troisième cours sur l'initiation au langage R et au logiciel Rstudio je montre : (a) comment copier le chemin d'accès d'un dossier ou d'un fichier qui est sur l'ordinateur, (b) le code R (sur Rstudio) pour désigner un répertoire de travail, pour savoir dans quel répertoire de travail on est et pour avoir la liste des fichiers qui sont stockés (enregistrés) sur le répertoire de travail. Vous pouvez télécharger le code R développé dans ce cours à travers le lien suivant : https://drive.google.com/file/d/1a2bXa04HSVTSzmlHMUqVcfVc04kPvjC9/view?usp=sharing
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+# Comment désigner le répertoire de travail
+
+# How to set working directories
+
+#-------------------------------------4+34+
+
+# Répertoire de travail = working directory
+
+# Dossier = folder
+
+# Fichier = file
+
+# -----------------------------------
+
+# Pour désigner le répertoire de travail
+
+setwd("C:\Users\gveracru\Desktop\dossier_exemple")
+
+
+# Pour désigner le répertoire de travail utilisant les "back-slashes"
+
+setwd("C:\\Users\\gveracru\\Desktop\\dossier_exemple")
+
+
+# Pour désigner le répertoire de travail utilisant les "forward-slashes"
+
+setwd("C:/Users/gveracru/Desktop/dossier_exemple")
+
+
+# Pour savoir quel est l'actuel répertoire de travailw
+
+getwd()
+
+# Pour avoir la liste des fichiers qui sont sur le dossier / répertoire de travail
+
+list.files()
+
+# Pour désigner comme répertoire de travail un sous-dossier appelé "subfolder" à l'intérieur du répertoire
+
+setwd("subfolder")
+getwd()
