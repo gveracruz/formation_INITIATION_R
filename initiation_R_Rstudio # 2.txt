@@ -1,0 +1,38 @@
+
+Initiation à R et Rstudio # 2 : 
+Découvrir l’interface Rstudio.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+----------------------------------
+
+EXPLICATIONS
+
+L’interface de RStudio est divisée en quatre quadrants :
+
+a)	 Le quadrant supérieur gauche est dédié aux différents fichiers de travail 
+
+b)	Le quadrant inférieur gauche correspond à ce que l’on appelle la console, c’est-à-dire à R proprement dit ;
+
+c)	Le quadrant supérieur droit permet de connaître : 
+
+-	La liste des objets en mémoire ou environnement de travail (onglet Environment)
+
+-	Ainsi que l’historique des commandes saisies dans la console (onglet History) ;
+
+ 
+d)	Le quadrant inférieur droit affiche 
+
+-	 La liste des fichiers du répertoire de travail (onglet Files), 
+
+-	Les graphiques réalisés (onglet Plots), 
+
+
+-	La liste des extensions disponibles (onglet Packages),
+ 
+-	 L’aide en ligne (onglet Help) 
+
+-	Et un Viewer utilisé pour visualiser certains types de graphiques au format web.
+
+Inutile de tout retenir pour le moment. Nous aborderons chaque outil en temps utile. Pour l’heure, concentrons-nous sur la console, c’est-à-dire le quadrant inférieur gauche.
