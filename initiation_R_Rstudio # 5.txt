@@ -1,0 +1,145 @@
+
+
+Initiation à R et Rstudio # 5 : 
+Les bases du langage – L’indexation des éléments d’un vecteur.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce cinquième cours, j’explique l’« indexation » en langage R, et comment faire l’indexation des éléments d’un vecteur : (a) indexation par position, (b) indexation par nom, (c) indexation par condition.
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+
+        # INDEXATION D'UN VECTEUR
+
+
+
+# INDEXATION PAR POSITION
+
+index1 <- c(2, "a", 3, "b", 4, "c", 5, "d", 6, "e", 7, "f")
+
+# Accéder au premier élément du vecteur
+
+index1[1]
+
+# Si on souhaite les trois premiers éléments ou les éléments du vecteur :
+
+index1[1:3]
+
+# Avoir les éléments positionnés aux places suivantes : 2, 5, 6
+
+index1[c(2, 5, 6)]
+
+# Toutes les valeurs sauf ceux qui sont à la position 1 et 2
+
+index1[c(-1, -2)]
+
+
+# INDEXATION PAR NOM
+
+
+sexe <- c(Michel = "h", Anne = "f", Dominique = NA, Jean = "h",
+          Claude = NA, Marie = "f")
+
+names(sexe)
+
+# Pour ajouter ou modifier les noms d’un vecteur, on doit attribuer un nouveau vecteur de noms :
+
+names(sexe) <- c("Michael", "Anna", "Dom", "John", "Alex", "Mary")
+
+sexe
+
+  
+
+# Lorsqu’un vecteur est nommé, il est dès lors possible d’accéder à ses valeurs à partir de leur nom. Il s’agit
+# de l’indexation par nom.
+
+sexe["Anna"]
+
+sexe[c("Mary", "Michael", "John")]
+
+sexe[names != "Dom"]
+
+
+# INDEXATION PAR CONDITION
+
+
+# L’indexation par condition consiste à fournir un vecteur logique indiquant si chaque élément doit être inclus
+# (si TRUE) ou exclus (si FALSE). 
+
+# Par exemple :
+
+
+sexe[c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE)]
+
+
+sexe
+
+urbain <- c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE)
+
+
+sexe[urbain]
+
+
+# Opérateur de comparaison Signification
+
+  # == égal à
+
+  # != différent de
+
+  # > strictement supérieur à
+
+  # < strictement inférieur à
+
+  # >= supérieur ou égal à
+
+  # <= inférieur ou égal à
+
+
+taille <- c(10, 20, 80, 70, 100, 200)
+
+poids <- c(80, 63, 75, 87, 82, 67)
+
+urbain2 <- c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE)
+
+
+
+taille[taille >=80]
+
+
+taille[poids >= 80]
+
+# Opérateur logique Signification
+
+  # & et logique
+
+  # | ou logique
+
+  # ! négation logique
+
+
+# Supposons que je veuille identifier les personnes pesant 80 kilogrammes ou plus et vivant en milieu urbain :
+  
+urbain2 <- c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE)
+
+poids <- c(80, 63, 75, 87, 82, 67)
+
+poids >= 80 & urbain
+
+# Les résultats sont différents si je souhaite isoler les personnes pesant 80 kilogrammes ou plus ou vivant
+# milieu urbain:
+  
+
+poids >= 80 | urbain
+
+# LES VALEURS MANQUANTES
+
+v_manq <- c(5, NA, 0, 10)
+
+is.na(v_manq)
+
+!is.na(v_manq)
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------
