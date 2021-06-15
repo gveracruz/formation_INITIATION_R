@@ -1,0 +1,144 @@
+
+
+Initiation à R et Rstudio # 6 : 
+Les bases du langage – L’objet « liste » et son indexation.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce sixième cours, j’explique les caractéristiques de l’objet R list (liste), et comment faire l’indexation des éléments d’une liste : (a) indexation par position, (b) indexation par nom, (c) indexation par condition.
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+        
+                            # 3. LES LISTES
+
+
+# Creation d'une list
+
+ma_premier_liste <- list(c("a", "b"), 5, c(3, 2))
+
+
+l1 <- list(1:5, "abc")
+
+l1
+
+# Une liste est un ensemble d’objets, quels qu’ils soient, chaque élément d’une liste pouvant avoir ses
+# propres dimensions. Dans notre exemple précédent, nous avons créée une liste l1 composée de deux
+# élements : un vecteur d’entiers de longeur 5 et un vecteur textuel de longueur 1. La longueur d’une liste
+# correspond aux nombres d’éléments qu’elle contient et s’obtient avec length :
+  
+length(l1)
+
+
+# Comme les vecteurs, une liste peut être nommées et les noms des éléments d’une liste accessibles avec la fonction
+# names :
+
+l2 <- list(minuscules = letters, majuscules = LETTERS, mois = month.name)
+
+l2
+
+length(l2)
+
+names(l2)
+
+# On peut créer une list à partir d'autres lists
+
+l3 <- list(l1, l2)
+
+# La nouvelle list est de longeur 2, car nous avons créé une liste composée de deux éléments qui sont
+# eux-mêmes des listes. 
+
+length(l3)
+
+# Cela est plus lisible si l’on fait appel à la fonction str qui permet de visualiser la
+# structure d’un objet.
+
+str(l3)
+
+# Une liste peut contenir tout type d’objets, y compris d’autres listes. Pour combiner les éléments d’une liste,
+# il faut utiliser la fonction append :
+  
+l4 <- append(l1, l2)
+
+l4
+
+length(l4)
+
+str(l4)
+
+
+      # Indexation d'une list
+
+
+# Les crochets simples ( [] ) fonctionnent comme pour les vecteurs. On peut utiliser à la fois l’indexation
+# par position, l’indexation par nom et l’indexation par condition.
+
+
+
+# Indexation par position
+
+l4[1]
+
+l4[c(1, 3, 4)]
+
+# Indexation par nom
+
+l2[c("majuscules", "minuscules")]
+
+# Indexation par condition
+
+l4[c(TRUE, TRUE, FALSE, FALSE, TRUE)]
+
+# Même si l’on extrait un seul élément, l’extraction obtenue avec les crochets simples renvoie toujours une
+# liste, ici composée d’un seul élément :
+
+str(l3[1])
+
+# Supposons que je souhaite calculer la moyenne des valeurs du premier élément de ma liste. Essayons la
+# commande suivante :
+  
+mean(l3[1], na.rm = TRUE) 
+
+# Nous obtenons un message d’erreur. En effet, R ne sait pas calculer une moyenne à partir d’une liste. Ce
+# qu’il lui faut, c’est un vecteur de valeurs numériques. Autrement dit, ce que nous cherchons à obtenir c’est
+# le contenu même du premier élément de notre liste et non une liste à un seul élément.
+
+# C’est ici que les doubles crochets ( [[]] ) vont rentrer en jeu. Pour ces derniers, nous pourrons utiliser
+# l’indexation par position ou l’indexation par nom, mais pas l’indexation par condition. De plus, le critère
+# que l’on indiquera doit indiquer un et un seul élément de notre liste. Au lieu de renvoyer une liste à un
+# élément, les doubles crochets vont renvoyer l’élément désigné. 
+
+str(l4[1])
+
+str(l4[[1]])
+
+# Maintenant, nous pouvons calculer notre moyenne :
+
+mean(l4[[1]])
+
+# Nous pouvons aussi tester l’indexation par nom.
+
+l4[["mois"]]
+
+# Mais il faut avouer que cette écriture avec doubles crochets et guillemets est un peu lourde.
+# Heureusement, un nouvel acteur entre en scène : le symbole dollar ( $ ). C’est un raccourci des doubles
+# crochets pour l’indexation par nom. Que l’on utilise ainsi :
+
+l4$mois
+
+# Les écritures l4$mois et l4[["mois"]] sont équivalentes. Attention! Cela ne fonctionne que pour
+# l’indexation par nom.
+
+l4$1
+
+# L’assignation par indexation fonctionne également avec les doubles crochets ou le signe dollar :
+
+l4[[2]] <- list(c("un", "vecteur", "textuel"))
+
+l4$mois <- c("Janvier", "Février", "Mars")
+
+l4
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------
