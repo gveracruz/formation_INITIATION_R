@@ -1,0 +1,174 @@
+
+
+
+Initiation à R et Rstudio # 7 : 
+Les bases du langage – Les objets « facteur » et « dates ».
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce septième cours, j’explique les caractéristiques de deux l’objets R : les facteurs (variables catégorielles) et les dates.
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+
+                        # 4. LES FACTEURS
+
+# Ceryains études l’emploi de variables qualitatives. R possède un objet qui gère ces variables : factor. 
+# On utilise la fonction factor() pour encoder un vecteur en facteur.
+
+pays <- factor(c("France", "Brésil", "France", "Mozambique", "Brésil", "Brésil", "Mozambique", "France"))
+
+pays
+
+# La fonction class() permet de savoir qu'elle type d'objet R c'est.
+
+class(pays)
+
+# La fonction levels() retourne les niveaux du facteur.
+
+levels(pays)
+
+# Lors des analyses, il arrive de vouloir choisir la modalité de réféfence plutôt que de laisser R le
+# faire automatiquement. Il suffit alors d’utiliser la fonction relevel(). Il faut toutefois ne pas
+# oublier de réassigner le résultat à l’objet !
+
+pays <- relevel(pays, ref = "Brésil")
+pays
+
+# Si les variables catégorielles sont ordonnées, R propose la fonction ordered().
+
+revenus <- ordered(c("<500", ">2000", ">2000", "500-1000", ">3000", "<500"),
+                   levels = c("<500", "500-1000", ">2000", ">3000"))
+
+revenus
+
+
+#################################################################################################################
+
+
+                        # 5. LES DATES
+
+
+# On note trois principales classes pour représenter des dates en R :
+
+#   • Date : adapté pour les dates, uniquement celles pour lesquelles on ne possède pas d’informations à propos de l’heure
+
+# (e.g. "1977-05-27") ;
+
+# • POSIXct et POSIXlt : pour les dates avec des heures (e.g. "1977-05-27 20:00:00").
+
+# Dates
+
+# Les dates sont stoquées comme le nombre de jours depuis 1970-01-01, avec des valeurs négatives
+# pour des dates antérieures. Le format d’affichage est celui du calendrier grégorien.
+
+# La fonction as.Date() convertit une chaîne de caratcères en date. Si le format est de la forme
+
+# %Y-%m-%d ou %Y/%m/%d (avec %Y l’année avec le siècle, %m le mois sur deux chiffres et %d le jour
+
+# sur deux chiffres).
+
+#Il n’est pas nécessaire de renseigner le paramètre format de la fonction.
+
+# Le paramètre origin permet quant à lui de préciser une origine différente de 1970-01-01.
+
+
+(h <- as.Date("2015-10-21"))
+
+
+class(h)
+
+unclass(h)
+
+
+# La date du jour
+
+
+as.Date(Sys.time())
+
+
+# Avec un format non standard
+
+
+(t <- as.Date("2015 21 10", format = ("%Y %d %m")))
+
+(j <- as.Date("21 Octobre, 2015", format = ("%d %B, %Y")))
+
+
+# La fonction unclass() permet de voir la valeur stockée en interne.
+# Comme on peut le voir dans le précédent exemple, le paramètre format a été utilisé. Ce paramètre permet de préciser 
+# comment la date est écrite dans la chaîne de caractères, pour que la conversion en objet de classe date soit possible. 
+# Cette conversion est réalisée, en interne, par la
+# fonction strptime(). La page d’aide de cette fonction (?strptime) donne les différents codes
+# qui spécifient les formats de date. Attention, certains de ces formats dépendent de paramètres
+# locaux à la machine (des exemples sont donnés plus loin).
+# Les codes spécifiant les formats de date sont consignés dans le tableau suivant (voir le cours).
+
+# POSIXct et POSIXlt
+
+# POSIXct et POSIXlt
+
+# Si les dates à représenter contiennent des heures, il faut préférer le format POSIXct ou POSIXlt. Avec POSIXct, 
+# les dates sont stockées en secondes depuis les débuts d’Unix (1970-01-01)
+# Avec POSIXlt, les dates sont stockées sous forme de liste dont les éléments correspondent à différentes composantes de la date (voir le #tableau ci-après). Les fonctions as.POSIXct()
+# et as.POSIXlt() permettent de convertir une chaîne de caractère représentant une date en objet POSIXct ou POSIXlt. 
+# À nouveau, la fonction strptime() est utilisée en interne pour réaliser la conversion des chaînes de caractères en dates.
+
+# POSIXct
+j1 <- as.POSIXct("2015-10-21 13:55:44")
+
+unclass(j1)
+
+unclass(as.POSIXct("1970-01-01 01:00:00"))
+
+j2 <- as.POSIXlt("2015-10-21 13:55:44")
+
+unlist(unclass(j2))
+
+
+# Les éléments de la liste d’un objet de classe POSIXlt sont répertoriés dans le tableau suivant (voir les cours)
+# (voir page d’aide ?DateTimeClasses).
+
+# Le package lubridate propose également des fonctions pour gérer les dates. Il est nécessaire de
+# charger le package en mémoire.
+# Pour convertir une chaîne de caractères représentant une date, il suffit d’utiliser une des trois
+# fonctions suivantes :
+
+# ymd(), mdy() et dmy(). 
+
+# Les trois lettres de ces fonctions font référence à
+# l’année (y), le mois (m) et le jour (d). La position de ces lettres dans le nom de la fonction doit
+# correspondre à celui des éléments correspondants dans la chaîne de caractères. 
+
+# Ainsi, ymd() s’attend à trouver d’abord l’année, puis le mois et enfin le jour dans la chaîne de caractères.
+# Le gros avantage de ces fonctions est qu’il n’est pas nécessaire de préciser les séparateurs, une
+# analyse est faite automatiquement pour le deviner.
+
+install.packages("lubricate")
+
+library(lubridate)
+
+ymd("2015-10-21") 
+
+mdy("10.21-15")
+
+dmy("21 oct 2015")
+
+
+# Il est possible de préciser le fuseau horaire (à condition que le nom soit reconnu par le système
+# d’exploitation), en renseignant le paramètre tz.
+
+ymd("2015-10-21", tz = "Pacific/Auckland")
+
+# La fonction OlsonNames() retourne un vecteur contenant tous les fuseaux horaires disponibles.
+# S’il y a des informations d’heures dans les chaînes de caractères représentant les dates, il suffit
+# d’ajouter h (heures), ou hm (heures et minutes) ou hms (heures, minutes et secondes) au
+# nom de la fonction, en séparant par un trait de soulignement.
+
+OlsonNames()
+
+ymd_hms("2015-10-21 10:00:50")
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------
