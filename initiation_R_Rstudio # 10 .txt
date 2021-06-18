@@ -1,0 +1,446 @@
+
+
+Initiation à R et Rstudio # 10 : 
+Le dataframe, importer et exporter des fichiers.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce dixième cours, (a) j’explique les caractéristiques d’un objet R appelé dataframe : comment on crée un dataframe, comment on fait l’indexation des colonnes et des lignes d’un dataframe ; (b) j’explique également comme importer vers Rstudio des fichiers de type xlsx, csv, spss, stata, sas et comment exporter vers votre ordinateur des fichiers dans le format xlsx, csv, etc.
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+
+     # 4. LE DATAFRAME / DATASET = JEU DE DONNEES
+  
+  
+  
+# Première façon de créer un dataframe
+  
+  #création à partir de 3 vecteurs de valeurs
+  
+  v1 <- c(15,8.2,14)
+  v2 <- c(TRUE,FALSE,TRUE)
+  v3 <- factor(c("M","F","M"))
+  
+  #liste
+  
+  liste <- list(v1,v2,v3)
+  
+  liste
+  
+  #data.frame
+  
+  df1 <- data.frame(liste)
+  
+  df1
+  
+  View(df1)
+  
+  #nommer les colonnes et les lignes
+  
+  colnames(df1) <- c("x1","x2","x3")
+  rownames(df1) <- c("pierre","paul","jacques")
+  
+  View(df1)
+  
+  #affichage
+  
+  print(class(df1))
+  print(summary(df1))
+  print(df1)
+  
+  
+# Deuxième façon de creer un dataframe
+  
+  df2 <- data.frame(v1 <- c(15,8.2,14), v2 <- c(TRUE,FALSE,TRUE), v3 <- factor(c("M","F","M")))
+  
+  df2
+  
+  View(df2)
+  
+  # renomer les colonnes et les lignes
+  
+  colnames(df2) <- c("x1","x2","x3")
+  rownames(df2) <- c("pierre","paul","jacques")
+  
+  
+            # 5. INDEXATION D'UN DATAFRAME
+  
+
+  # 5.1 Accès aux variables
+  
+# Indexation par nom
+  
+  df1$x1
+  
+# Indexation par position (indice)
+  
+  #par num.colonne
+  
+  df1[1]
+  
+  #format liste
+  
+  df1[[1]]
+  
+  #format matrice
+  
+  df1[,1]
+  
+  #accès par nom
+  
+  df1["x1"]
+  
+  df1[["x1"]]
+  
+  df[,"x1"]
+  
+    # 5.2. Accès individus x variables
+  
+  
+  #1er individu
+  
+  df1[1,]
+  
+  #1er et 3e individus
+  
+  df1[c(1,3),]
+  
+  #accès par nom
+  
+  df1["paul",]
+  
+  #indiv. (1,3) et var. (1,2)
+  
+  df1[c(1,3),1:2]
+  
+  #accès par nom de l'individu (1,3) x var (1,3)
+  
+  df1[c("pierre","jacques"),c("x1","x3")]
+  
+  
+              # 6. IMPORTER ET EXPORTER UN FICHIER DES DONNES
+  
+  
+      # 6.1. IMPORTER ET EXPORTER UN FICHIER EXCEL
+  
+  
+  # Importer
+  
+  install.packages("readxl")
+  
+  library(readxl)
+  
+  
+  gf1 <- read_excel("C:\\Users\\gveracru\\Desktop\\R cours materiaux\\rheumathology_type_prediction.xlsx", 
+                    sheet = "vari", range = "C3:D22")
+  
+  
+  View(gf1)
+  
+  class(gf1)
+  
+  # Exporter
+  
+  install.packages("questionr")
+  
+  library(questionr)
+  
+  install.packages("dplyr")
+  
+  library(dplyr)
+  
+  
+  dt1 <- hdv2003
+  
+  View(dt1)
+  
+  dim(dt1)
+  
+  colnames(dt1)
+  
+  row.names(dt1)
+  
+  str(dt1)
+  
+  summary(dt1)
+  
+  glimpse(dt1)
+  
+  table(dt1$sexe, dt1$bricol)
+  
+  tab <- table(dt1$sexe, dt1$bricol)
+  
+  tab
+ 
+# Copier/coller vers Excel et Word via le presse-papier
+# La première possibilité est d'utiliser les options par défaut de copie. Celle-ci va alors transformer le tableau (ou l'objet) 
+# en HTML et placer le résultat dans le presse-papier du système. Ceci ne fonctionne malheureusement que sous Windows(33).
+  
+# On peut ensuite récupérer le résultat dans une feuille Excel en effectuant un simple Coller.  
+  
+  copie(tab)
+  
+# Export vers Word ou OpenOffice via un fichier
+# L'autre possibilité ne nécessite pas de passer par Excel, et fonctionne sous Word et OpenOffice sur toutes les plates-formes.
+# 
+# Elle nécessite de passer à la fonction copie l'option file=TRUE qui enregistre le contenu de l'objet dans un fichier plutôt 
+# que de le placer dans le presse-papier :
+
+  copie(tab, file = TRUE)
+  
+# Par défaut le résultat est placé dans un fichier nommé temp.html dans le répertoire courant, mais on peut modifier le nom et 
+# l'emplacement avec l'option filename :
+ 
+copie(tab, file = TRUE, filename = "exports/tab1.html")
+
+# On peut ensuite l'intégrer directement dans Word ou dans OpenOffice en utilisant le menu Insertion puis Fichier et en 
+# sélectionnant le fichier de sortie généré précédemment.
+
+      # Exporter avec une fonction
+  
+# Exporter un fichier excel en R avec la fonction write.xlsx()
+# L'écriture de fichier excel n'est pas disponible nativement en R. Pour cela, nous allons nous tourner vers la librairie xlsx 
+# et sa fonction write.xlsx().
+# Contrairement aux fonctionnalités d'export de fichier .csv, l'export de fichier Excel en R n'est pas disponible nativement. 
+# Après avoir installé le package xlsx, si nécessaire, il faudra donc importer la librairie xlsx puis appeler 
+# la fonction write.xlsx().
+# Voici les instructions de base pour écrire un fichier excel :
+
+dt2 <- dt1[1:5, 3:9]
+
+install.packages("xlsx")
+
+library(xlsx)
+
+write.xlsx(x = dt2, file = "monFichier.xlsx")
+ 
+# Ainsi, votre dataframe est exporté au format excel à la racine de votre répertoire de travail.
+# Aller plus loin avec la fonction write.xlsx()
+# Contrairement aux fichier .csv, les fichiers excel disposent d'une multitude de fonctionnalités avancées permettant d'enrichir 
+# vos tableaux. La fonction write.xlsx() vous permet d'en tirer parti. Voici quelques paramètres optionnels vous 
+# permettant d'aller plus loin dans l'écriture de fichiers excel en R.
+
+  col.names = TRUE
+  row.names = TRUE
+  append = FALSE
+  showNA = TRUE
+
+# Vous pouvez par exemple écrire des fichiers excel comprenant plusieurs feuilles en écrasant votre fichier et en mentionnant 
+# un nom différent dans le paramètre sheetName.
+
+  write.xlsx(x = dt2, file = "monFichier.xlsx", sheet = "Feuille_1")
+  write.xlsx(x = dt2, file = "monFichier.xlsx", sheetName = "Feuille_2")
+  
+ # Exporter un fichier excel utilisant le package "openxlsx"
+  
+  install.packages("openxlsx")
+  
+  library(openxlsx)
+  
+  write.xlsx(x = dt2, file = "data_excel.xlsx")
+  
+
+  # 6.2. IMPORTER ET EXPORTER UN FICHIER CSV
+  
+
+    # Importer un fichier .csv en R
+# L'import de fichier .csv : une fonctionnalité native de R
+# Deux fonctions permettent d'importer des fichiers .csv dans votre environnement R : read.csv() et read.table().
+  
+    # Import d'un fichier .csv en R avec read.csv()
+  
+# La fonction read.csv est une fonction de base du langage R. Elle se décompose de la manière suivante.
+  
+
+  monDataset <- read.csv(chemin fichierCSV)
+  
+
+# Cette instruction aura pour effet de transformer votre fichier .csv en dataset. Celui-ci sera enregistré dans l'environnement sous le nom monDataset. Vous pourrez ainsi parcourir ses données et les manipuler dans vos scripts R.
+#   
+# D'autres arguments sont disponibles pour une utilisation plus poussée de la fonction read.csv(). Voici les principaux :
+# 
+# sheet = 1 # Le nom ou l'index de la feuille à lire
+
+  startRow = 1 # Le numéro de la première ligne à lire
+  colNames = TRUE # paramétré de base en TRUE, définit la première ligne comme l'entête du dataframe
+  rowNames = FALSE # paramétré de base en FALSE, sélectionne la première colonne comme nom de ligne
+  
+  
+# L'usage de ces arguments peut être très important, notamment dans le cas d'importation de fichiers .csv ne respectant pas 
+# la norme décimale anglo-saxonne.
+  
+# Pour contrer ces problèmes de compatibilités, une variante read.csv2() existe en utilisant par défaut 
+# les valeurs sep = ";" et dec = ",". La fonction read.csv2() est nativement plus adapté aux fichiers séparés par un.
+  
+    #Import d'un fichier .csv en R avec read.table()
+#  
+# De manière générale, la fonction read.table() a le même comportement que la fonction read.csv(). 
+# En effet, read.csv() est globalement une version de read.table() à laquelle des paramètres par défaut ont été attribués.
+# 
+# Pour lire un fichier .csv avec read table, la structure de base reste la même, à savoir :
+
+read.table(file)
+ 
+
+# Cependant, la fonction read.table() ne mentionne pas par défaut les délimiteurs spécifiques aux fichiers .csv. 
+# Cette instruction aura donc pour effet d'enregistrer un dataset d'une colonne dont l'entête n'est pas définie.
+# Pour obtenir le même résultat qu'avec la fonction read.csv() et obtenir un dataframe séparé, 
+# il est nécessaire de renseigner les attributs suivants :
+    
+    # read.table(file, header = TRUE, sep = ",", quote = """, dec = ".", fill = TRUE, comment.char = "")
+ 
+# Ainsi, la fonction read.table() sera plus adaptée aux formats de fichiers plus exotiques, même si les paramètres modifiables de la fonction read.csv() permettent de contourner ces problématiques.
+  
+# Exporter un fichier .csv en R avec write.csv()
+# La fonction write.csv() est la fonction de base pour écrire des fichiers .csv en langage R.
+# Elle se décompose de la façon suivante :
+    
+    write.csv(x = monDataframe, file = "monFichier.csv") 
+  
+# Votre dataframe est ainsi exporté à la racine de votre répertoire de travail.
+# L'une des spécificités de cette fonction est d'exporter un fichier séparé par des virgules et utilisant donc le 
+# caractère point pour les décimales. Une variante, write.csv2() est utilisée pour les formats de fichiers utilisant 
+# le caractère point-virgule comme séparateur et ainsi la virgule comme décimale.
+# Notez que par défaut, les paramètres row.names et col.names ont pour valeur TRUE, ce qui aura pour 
+# effet d'utiliser la première colonne et la première ligne comme entête de votre fichier.
+
+  # Écrire un fichier .csv en R avec write.table()
+# Globalement, la fonction write.table() repose sur le même fonctionnement que la fonction write.csv(). 
+# Elle se décompose de la manière suivante 
+
+  write.table(x = monDataframe, file = "monFichier.csv")
+  
+# Quelle différence avec la fonction write.csv() ?
+# Sa spécificité est d'être plus paramétrable et donc adapté à l'export de fichiers dans des formats plus exotiques. 
+# À n'utiliser que pour quelques cas particuliers de ce fait.
+  
+  
+      # 6.3. IMPORTER DES FICHIERS TEXTES
+          
+          
+# L’extension readr, qui fait partie du tidyverse, permet l’importation de fichiers texte, notamment au format 
+# CSV (Comma separated values), format standard pour l’échange de données tabulaires entre logiciels.
+#   
+# Cette extension fait partie du “coeur” du tidyverse, elle est donc automatiquement chargée avec :
+    
+    install.packages("didyverse")
+    library(tidyverse)
+
+# Si votre fichier CSV suit un format CSV standard (c’est le cas s’il a été exporté depuis LibreOffice par exemple), avec des champs séparés par des virgules, vous pouvez utiliser la fonction read_csv en lui passant en argument le nom du fichier :
+    
+    d <- read_csv("fichier.csv")
+
+# Si votre fichier vient d’Excel, avec des valeurs séparées par des points virgule, utilisez la fonction read_csv2 :
+    
+    d <- read_csv2("fichier.csv")
+  
+# Dans la même famille de fonction, read_tsv permet d’importer des fichiers dont les valeurs sont séparées par des tabulations, et read_delim des fichiers délimités par un séparateur indiqué en argument.
+   
+# Chaque fonction dispose de plusieurs arguments, parmi lesquels :
+    
+# col_names indique si la première ligne contient le nom des colonnes (TRUE par défaut)
+# col_types permet de spécifier manuellement le type des colonnes si readr ne les identifie pas correctement
+# na est un vecteur de chaînes de caractères indiquant les valeurs devant être considérées comme manquantes. 
+# Ce vecteur vaut c("", "NA") par défaut
+# Il peut arriver, notamment sous Windows, que l’encodage des caractères accentués ne soit pas correct au moment de l’importation. 
+# On peut alors spécifier manuellement l’encodage du fichier importé à l’aide de l’option locale. Par exemple, 
+# si l’on est sous Mac ou Linux et que le fichier a été créé sous Windows, il est possible qu’il soit encodé au 
+# format iso-8859-1. On peut alors l’importer avec :
+    
+    d <- read_csv("fichier.csv", locale = locale(encoding = "ISO-8859-1"))
+
+# À l’inverse, si vous importez un fichier sous Windows et que les accents ne sont pas affichés correctement, 
+# il est sans doute encodé en UTF-8 :
+    
+    d <- read_csv("fichier.csv", locale = locale(encoding = "UTF-8"))
+  
+# Pour plus d’informations sur ces fonctions, voir le site de l’extension readr.
+    
+  
+      # 6.4. IMPORTER DES FICHIERS SAS, SPSS ET STATA
+    
+  
+# L’import de fichiers de données au format SAS, SPSS ou Stata se fait via les fonctions de l’extension haven.
+#   
+# Celle-ci fait partie du tidyverse, mais doit être chargée explicitement avec :
+    
+    install.packages("haven") 
+    library(haven)
+  
+# Pour les fichiers provenant de SAS, vous pouvez utiliser les fonctions read_sas ou read_xpt
+# Pour les fichiers provenant de SPSS, vous pouvez utiliser read_sav ou read_por
+# Pour les fichiers provenant de Stata, utilisez read_dta
+# Chaque fonction dispose de plusieurs options. Le plus simple est d’utiliser, là aussi l’interface interactive 
+# d’importation de données de RStudio : dans l’onglet Environment, sélectionnez Import Dataset puis From SPSS, 
+# From SAS ou From Stata. Indiquez le chemin ou l’url du fichier, réglez les options d’importation, 
+# puis copiez le code d’importation généré et collez le dans votre script.
+  
+# Pour plus d’informations, voir le site de l’extension haven
+    
+  
+        # 6.5. IMPORTER DES FICHIERS dBase
+      
+  
+# Le format dBase est encore utilisé, notamment par l’INSEE, pour la diffusion de données volumineuses.
+  
+# Les fichiers au format dbf peuvent être importées à l’aide de la fonction read.dbf de l’extension foreign 12 :
+    
+    install.packages("foreign")
+    library(foreign)
+  
+  
+  d <- read.dbf("fichier.dbf")
+  
+# La fonction read.dbf n’admet qu’un seul argument, as.is. Si as.is = FALSE (valeur par défaut), les chaînes de caractères sont automatiquement converties en factor à l’importation. Si as.is = TRUE, elles sont conservées telles quelles.
+  
+      
+        # 6.6. CONNEXION A DES BASES DE DONNEES
+  
+        
+  # 6.6.1 Interfaçage via l’extension DBI
+  
+  
+# R est capable de s’interfacer avec différents systèmes de bases de données relationnelles, dont SQLite, MS SQL Server, PostgreSQL, MariaDB, etc.
+#   
+# Pour illustrer rapidement l’utilisation de bases de données, on va créer une base SQLite d’exemple à l’aide du code R suivant, qui copie la table du jeu de données mtcars dans une base de données bdd.sqlite :
+    
+  library(DBI)
+  library(RSQLite)
+
+  con <- DBI::dbConnect(RSQLite::SQLite(), dbname = "bdd.sqlite")
+  data(mtcars)
+  mtcars$name <- rownames(mtcars)
+  dbWriteTable(con, "mtcars", mtcars)
+  dbDisconnect(con)
+  
+  
+               # 7. SAUVEGARDER UN OBJET R SUR SON REPERTOIRE DE TRAVAIL
+  
+
+# En supposant que l'object s'appelle object_1, et que vous voulez l'enregistrer sous le nom "data" :
+  
+  save(object_1, file="data.Rda")
+  
+# Pour charger ce même object sur Rstudio
+  
+  load("data.Rda")
+  
+# You could also use write.table() or something like that to save the table in plain text, 
+# or dput() to obtain R code to reproduce the table.
+  
+# If you are only saving a single object (your data frame), you could also use saveRDS.
+# To save:
+    
+  saveRDS(object_1, file="data.Rda")
+  
+# Then read it with:
+    
+  bar <- readRDS(file="data.Rda")
+
+# The difference between saveRDS and save is that in the former only one object can be saved and the name of the object 
+# is not forced to be the same after you load it.
+  
+  
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 
