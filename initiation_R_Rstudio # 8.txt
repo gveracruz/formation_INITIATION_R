@@ -1,0 +1,164 @@
+
+
+Initiation à R et Rstudio # 8 : 
+Les bases du langage – Les types des données et la structures des objets R.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce huitième cours, je passe en revue les différents types de données et les structures des objets R.
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+
+                              # 6. LES TYPES DE DONNEES
+
+
+# R gère des objets, qui sont caractérisés par un nom, un mode, une longueur et un contenu.
+
+# Le mode d’un objet est la nature des éléments qui le composent, leur type. On y accède par la
+# fonction mode() ou encore typeof().
+
+
+mode(l3)
+
+
+       # Numeric
+
+ex1 <- 2
+
+mode(ex1)
+
+
+      # Double (decimal)
+
+ex2 <- 2.0
+
+typeof(ex2)
+
+
+      # Character
+
+ex3 <- "Hello world"
+
+typeof(ex3)
+
+
+      # Logical (logique, booléen) 
+
+# Les données de type logique peuvent prendre deux valeurs : TRUE ou FALSE. Elles répondent à une condition logique.
+
+
+a <- 1 ; b <- 2
+
+a < b
+
+a == 1 # Test d'égalité
+
+a != 1 # Test d'inégalité
+
+
+      # Questionner le type d'un object
+
+is.character(a)
+
+is.numeric(a)
+
+is.integer(ex1)
+
+is.numeric(ex1)
+
+
+      # Transformer le type d'un object
+
+
+ex2 <- 2.0
+
+c <- as.integer(ex2)
+
+typeof(c)
+
+
+         # Nombres complex (complexe)
+
+
+# Les nombres complexes sont caractérisés par leur partie réelle, que l’on peut obtenir
+# à l’aide de la fonction Re() ; et par leur partie imaginaire, que l’on obtient grâce à la
+# fonction Im(). On créé un nombre complexe à l’aide de la lettre i.
+
+1i
+
+z <- 2+3i
+
+Re(z) # Part
+
+Im(z) # Partie imaginaire de z
+
+Mod(z) # Module de z
+
+Arg(z) # Argument de z
+
+
+          # Données manquantes
+
+
+# Les données manquantes NA (not available) sont considérées comme étant de type logical par R.
+
+
+d <- NA
+
+typeof(d)
+
+is.na(d)
+
+          # L’objet vide
+
+# L’objet NULL représente le vide en R. Il est de mode NULL et de longueur 0. Il ne faut cependant
+# pas le confondre avec un objet vide.
+
+f <- NULL
+
+typeof(f)
+
+length(f)
+
+is.null(f)
+
+is.null(list()) # La liste vide n'est pas NULL
+
+
+#################################################################################################################
+
+
+                            # 7. LA STRUCTURE DES DONNEES
+
+
+# Il existe de nombreuses structures servant à organiser les données dans R. Cette introduction à
+# R n’a pas pour vocation de lister toutes celles qui existantent, aussi, seules quelques unes (les
+# principales) sont présentées dans cette section.
+
+# Pour connaître la structure d’un objet, il est possible d’utiliser la fonction class().
+
+      # Structures de base : vector, list, factor:
+
+is.vector(x)
+
+is.list(x)
+
+is.factor(x)
+
+      # Transformer une strcture en une autre
+
+list_ver_factor <- as.factor(list1)
+
+
+pays2 <- factor(c("France", "France", "Portugal", "Espagne", "Australie"))
+
+class(pays2)
+
+pays3 <- as.list(pays2)
+
+class(pays3)
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------
