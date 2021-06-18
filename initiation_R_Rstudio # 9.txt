@@ -1,0 +1,104 @@
+
+Initiation à R et Rstudio # 9 : 
+Les matrices et les tableaux.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce neuvième cours, j’explique quelles sont les caractéristiques des deux objets R : les matrices (matrix) et les tableaux (array).
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+      
+
+            # LES MATRICES ET LES TABLEAUX
+
+
+            # 1. MATRICES
+
+            
+# Les matrices sont des vecteurs auxquels un attribut dim (dimension) est ajouté. Une matrice
+# est un vecteur pour lequel l’attribut dim est de longueur 2. La fonction matrix() permet de
+# créer une matrice en R. Le code ci-après stoque dans "ma_premier_matrice" une matrice de 3 lignes (nrow = 3) et
+# de 2 colonnes (ncol = 2). Cette matrice est remplie par colonnes successives par les éléments
+# du vecteur 1:6.
+
+  ma_première_matrice <- matrix(1:6, ncol = 2, nrow = 3)
+
+  ma_première_matrice
+
+# Pour que la matrice soit remplie par lignes successives plutôt que par colonne, il suffit d’ajouter
+# le paramètre byrow à la fonction matrix() et de lui donner la valeur TRUE.
+  
+  matrice1 <- matrix(1:6, ncol = 2, nrow = 3, byrow = TRUE)
+  
+  matrice1
+  
+
+        # 2. TABLEAUX
+   
+
+# Lorsque la dimension d'une matrice dépasse 2, on parle de tableau (array). Par exemple, le code ci-après
+# permet de créer un tableau de dimension 2 × 4 × 3.
+
+  arr1 <-  array(1:24, dim = c(2, 4, 3))
+  arr1
+
+# Pour les matrices comme pour les tableaux, les données doivent toutes être du même type.
+# Les fonctions nrow() et ncol() donnent le nombre de lignes (rows) et de colonnes (columns)
+# d’une matrice. La fonction dim() donne un vecteur contenant les dimensions de la matrice ou
+# du tableau donné en paramètre.
+  
+  matrice2 <- matrix(1:6, ncol = 2, nrow = 3)
+  
+  dim(matrice2)
+  
+  nrow(matrice2)
+  
+  ncol(matrice2)
+  
+  
+  # Creer et renomer les colones et les lignes d'un tableau
+  
+  tabl1 <- as.table(rbind(c(762, 327, 468), c(484, 239, 477)))
+  
+  tabl1
+  
+  dimnames(tabl1) <- list(gender = c("F", "M"),
+                      party = c("Democrat","Independent", "Republican"))
+  
+  tabl1
+  
+  
+        
+        # 3. QUELQUES FONCTIONS OPERANT SUR LES MATRICES
+  
+ 
+  
+# On crée une matrice à 4 colonnes et 4 lignes
+  
+  matrice3 <- matrix(data = c(12,15,14,13,16,18,15,5,14,11,10,17,4,6,17,16), nrow=4, ncol=4)
+  
+  matrice3
+  
+  View(matrice3)
+
+  
+# On fait la somme sur les colonnes 
+  
+  colSums(matrice3)        
+  
+# On fait la somme sur les lignes
+  
+  rowSums(matrice3)      
+  
+# On fait la moyenne sur les colonnes
+  
+  colMeans(matrice3)
+  
+# On fait la moyenne sur les lignes
+  
+  rowMeans(matrice3)  
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------
