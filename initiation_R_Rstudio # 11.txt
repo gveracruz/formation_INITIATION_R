@@ -1,0 +1,691 @@
+
+
+Initiation à R et Rstudio # 11 : 
+Data wrangling – traitement de données avant l’analyse.
+
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Ce onzième cours est consacré à ce qu’on appelle (dans le jardon de la data science) data wrangling, data munging ou data processing. Il s’agit de traitement de données avant de les analyser : transformer les données d’un type à l’autre, renommer les variables, sélectionner une partie de lignes et des colonnes d’un tableaux, créer des nouvelles variables à partir des valeurs de certaines variables existantes (e.g., des nouvelles variables avec les moyennes, les médianes, les modes, etc.), imputation des valeurs manquantes, concaténer deux dataframes, etc.
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+
+            # DATA WRANGLING (wrangle = se quereller, se disputer)
+            # DATA MUNGING   (munging = manipuler, grignoter, gérer de châines)
+            # DATA PROCESSING
+
+
+      # INSTALLER ET CHARGER LES PACKAGES
+
+# Pour importer des fichier excel
+
+install.packages("readxl", dep = TRUE)
+library(readxl)
+
+# Pour exporter des fichier excel
+
+install.packages("xlsx") 
+library("xlsx")
+
+# Pour lire, transformer / traiter les données
+
+install.packages("readr", dep = TRUE)
+install.packages("plyr", dep = TRUE)
+install.packages("dplyr", dep = TRUE)
+install.packages("questionr", dep = TRUE)
+install.packages("tidyverse", dep = TRUE)
+install.packages("data.table")
+# Library
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(tidyverse)
+library(questionr)
+library(lubridate)
+library(data.table)
+
+
+install.packages("boom") # pour utiliser la function tidy
+library(MASS)
+library(broom)
+
+# Handling NA
+Install.packages("zoo")
+library(zoo) # to use na.aggregate() to fill na
+install.packages("imputeTS", dep=TRUE)
+library(imputeTS) # to use na_remove() and  na_mean()
+
+# Labelled factors
+install.packages("haven", dep=TRUE) # c'est l'extension contenant l'extension labelled?
+library(labelled)
+
+# To use pipe
+install.packages("magrittr") 
+library(magrittr)
+
+# To use melt()
+install.packages("reshape2")
+library(reshape2)
+
+# To rename rows and use the founction row_to_names
+# Simple Tools for Examining and Cleaning Dirty Data
+install.packages("janitor") 
+library(janitor)
+ef4 %>%
+  row_to_names(row_number = 1)
+
+# Pour visualiser les données ( faire des graphiques)
+
+install.packages("ggplot2", dep = TRUE)
+install.packages("ggpubr")
+library(ggplot2)
+library(ggpubr)
+
+
+# Pour faire des analyses statistiques
+
+install.packages("rstatix") # pour faire des ANOVA, X2, etc
+library(rstatix)
+install.packages("psych", dep=TRUE) # pour faire des analyses orienté psycho
+library(psych)
+install.packages("lm",dep = TRUE) # pour faire des regressions linéaire
+install.packages("glm") # pour faire des regressions logistiques
+library(glm)
+install.packages("lme4") # Fit linear and generalized linear mixed-effects models. 
+library(lme4)
+install.packages("merTools") # Provides methods for extracting results from mixed-effect model objects fit with the 'lme4' package
+library(merTools)
+
+install.packages("Hmisc") # pour utiliser les functions summarize
+library(Hmisc)
+summarize(x2[, 2:8], by = "clusters", FUN = freq)
+summaryM(age + sex + sbp + Symptoms ~ treatment, test=TRUE)
+
+
+
+#################################################################################################################
+
+
+
+install.packages("questionr")
+library(questionr)
+
+data(hdv2003)
+
+
+d1 <- hdv2003
+
+
+                              # EXPLORER LES DONNEES D'UN DATAFRAME
+
+
+# Afficher le dataframe
+
+  View(d1)
+
+# Afficher la dimension du dataframe (nb de lignes et nb de colonnes)
+  
+  dim(d1)
+  
+# Afficher le type d'objet
+  
+  class(d1)
+  
+  # Determiner le type de données des colonnes
+
+  sapply(d1, class)
+  
+  
+# Afficher la structure du dataframe (type de variables, etc)
+  
+  str(d1)
+  
+  glimpse(d1)
+  
+# Faire un sommaire descriptifs des données du dataframe
+  
+  summary(d1)
+  
+
+                            # EXPLORER LES COLONNES ET LES LIGNES D'UN DATAFRAME
+  
+  
+# Afficher les noms de colonnes et des lignes
+  
+  colnames(d1)
+  row.names(d1)
+  dput(names(d1))
+  
+  
+# Afficher la position (index) d'une colonne en indiquant son nom
+  
+  
+  grep("qualif", colnames(d1))
+  
+  as.data.frame(colnames(d1))
+  
+  which(colnames(d1)=="qualif")
+   
+  
+# Explorer les dimension et les stats descriptives des colonnes et des lines
+  
+  
+  length(d1$freres.soeurs)
+  
+  max(d1$freres.soeurs)
+  
+  min(d1$freres.soeurs)
+  
+  range(d1$freres.soeurs)
+  
+  mean(d1$freres.soeurs)
+  
+  median(d1$freres.soeurs)
+  
+  sd(d1$freres.soeurs)
+  
+  var(d1$freres.soeurs)
+  
+  unique(d1$heures.tv) # pour une variable quelconque (afficher les valeurs uniques)
+  
+  levels(d1$sexe) # pour les variables factor (afficher les modalités de la variable)
+  
+  
+                        # CALCULER LE MODE D'UNE COLONNE
+  
+  
+  # Le logiciel R ne permettant pas de calculer le mode d’un échantillon, voici une fonction pour le calculer :
+    
+
+  # Fonction permettant de calculer le mode d’un vecteur
+  
+  
+  stat.mode <- function(vecteur) {
+    unique(vecteur)[which.max(tabulate(match(vecteur, unique(vecteur))))]
+  }
+  
+  
+  # On crée un vecteur pour l’exemple
+  
+  exemple_vecteur <- c(1,2,2,3,3,3,4,4,4,4)
+  
+  # On exécute la fonction
+  
+  stat.mode(exemple_vecteur)
+  
+  # Limite de cette fonction :
+  # Cette fonction permet donc de récupérer la valeur la plus représentée d’une distribution. Toutefois, en cas d’égalité, 
+  # elle prendra la première des deux valeurs du vecteur (lecture de gauche à droite).
+  
+                    
+                              # RENOMER LES COLONNES
+  
+  
+  colnames(d1)[1] <- "identification"
+  colnames(d1)[1:20] <- paste0("col", 1:20, sep = "") 
+  colnames(tf3)[3:10] <- c("age", "gender", "edu_level", "ses", "pract_beliver", "religion", "living_area")
+  
+  
+  library(data.table)
+  
+  ds <- setnames(d1, old = c("sexe", "nivetud", "poids", "occup", "qualif"), 
+                 new = c("Sexe", "Nivetud", "Poids", "Occup", "Qualif"), skip_absent=TRUE)
+  
+  
+                    # SELECTIONNER UNE PARTIE DU DATAFRAME
+  
+  
+  # Eliminer le quatrieme colonne (indexation par position)
+  
+    d1[, -4]
+  
+  # Eliminer la colonne 3 et 7 (indexation par position)
+  
+    d2 <- d1[, -c(3,7)]
+  
+  # Creer un nouveau dataframe en selectionant certaines colonnes d'un dataframe (indexation par position)
+  
+    d3 <- d1[, -c(2,3,4:8,10:13)]
+  
+  # Eliminer des lignes or selectionner une partie des lignes d'un dataframe
+  
+    d1[-1, ]
+  
+    d1[-c(3,7, )]
+  
+    d1[-c(2,3,4:8,10:13), 2:10]
+  
+  
+  # Eliminer des colonnes d'un dataframe par le nom (Indexation par nom)
+  
+    library(dplyr)
+  
+    d1[ , -which(names(d1) %in% c("sexe", "nivetud", "poids", "occup", "qualif"))] # dans ce cas il faur mettre les guillimet
+  
+    subset(d1, select = -c("sexe", "nivetud", "poids", "occup", "qualif"))
+  
+  
+  # Selectionner des colonnes d'un dataframe par le nom (Indexation par nom)
+  
+    d1[ , which(names(d1) %in% c("sexe", "nivetud", "poids", "occup", "qualif"))] # dans ce cas il faur mettre les guillimet
+      
+    subset(d1, select = c("sexe", "nivetud", "poids", "occup", "qualif"))
+    
+    
+  # Filtrer un dataframe utilisant une condition
+    
+    d1[d1$freres.soeurs == 5, ]
+    
+    filter(d1,"cinema" == "Oui")
+    
+    subset(d1, poids > 10000.00)
+   
+    
+                            # CHANGER LE TYPE D'UNE COLONNE
+    
+    
+    str(d1)
+    
+    # De numeric à factor
+    
+    d2 <- d1
+    d1$age <- as.factor(d1$age)
+    
+    # De factor à numeric
+    
+    d2$cinema <- as.numeric(as.character(d2$cinema))
+    
+    # Convertir tous les colonnes character en factor
+    
+    library(dplyr)
+    df1 <- d1
+    df1 <- mutate_if(df1, is.character, as.factor)
+    
+    
+    # Converir certaines colonnes en factor
+    
+    d4 <- d1
+    
+    cols <- c("id", "age", "poids")
+    d4[cols] <- lapply(d4[cols], as.factor)
+    
+    
+    # Convertir le type d'une série de colonnes de factor to numeric
+    d5 <- d1
+    
+    colu <- c("clso", "relig", "trav.imp", "trav.satisf", 
+              "hard.rock", "lecture.bd", "peche.chasse", "cuisine", "bricol", 
+              "cinema", "sport")
+    d5[colu] <- lapply(d5[colu], function(x) as.numeric(as.character(x)))
+    
+    str(d5)
+    
+    
+                          # RENOMER LES LEVELS D'UNE COLONNE FACTEUR
+    
+    
+    tp1 <- d1
+    levels(tp1$sexe)
+    levels(tp1$sexe)[levels(tp1$sexe) == "Homme"] <- "1"
+    levels(tp1$sexe_2)[levels(tp1$sexe_2) == "Femme"] <- 2
+    
+    levels(tp1$sexe_2)
+    
+    install.packages("dplyr")
+    library(plyr)
+    revalue(d1$sexe, c("Homme"="beta", "Femme"="gamma"))
+    
+    levels(d1$qualif)
+    
+    d1$newcol_cat <- mapvalues(d1$qualif, from = c("Ouvrier specialise","Ouvrier qualifie","Technicien","Profession intermediaire",
+                                             "Cadre","Employe","Autre"), to = c(1,2,3,4,5,6,7))
+    
+    
+# TRANSFORMER UNE VARIABLE CONTNUE EN UNE VARIABLE CATEGORIELLE ET STOCKER LE    
+# RESULT DANS UNE NOUVELLE VARIABLE
+   
+    
+     range(tp2$age)
+    #range(tf3$edu_level)
+    
+    tp1$age_cat <- cut(tp1$age, c(18,26,35,66),include.lowest=TRUE, labels = c("youth", "adult", "mature"))
+    #tf3$edu_cat <- cut(tf3$edu_level, c(7,11,14,20),include.lowest=TRUE, labels = c("primary", "secondary", "tertiary"))
+    
+    tf3$relig_cat[tf3$religion %in% c(1,2)] <- "christian"
+    tf3$relig_cat[tf3$religion %in% c(3,5)] <- "muslim"
+    tf3$relig_cat[tf3$religion %in% c(4)] <- "trad_african"
+    
+    
+                  # CHANGER L'ORDRE DES COLONNES    
+    
+    
+    # changer l'ordre des colonnes
+    
+    library(dplyr)
+    data1 = d1 %>% select("id", "age", "sexe", "nivetud", "poids", "occup", "qualif", 
+                            "freres.soeurs", "clso", "relig", "trav.imp", "trav.satisf", 
+                            "hard.rock", "lecture.bd", "peche.chasse", "cuisine", "bricol", 
+                            "cinema", "sport", "heures.tv", "newcol_cat")
+    
+    
+    # Move column to first or last
+    
+    #last
+    data[,c(colnames(data)[colnames(data)!='b'],'b')]
+    #first:
+    
+    data%>%select(b, everything()) # autre fonction : last_col()
+    #last
+    
+    data%>%select(everything(), b)
+    
+    install.packages("magrittr") 
+    library(magrittr)
+    
+    ds8 <- ds7[,c(colnames(ds7)[colnames(ds7)!= "age"], "age")]
+    
+    
+                          # LE PACKAGE POUR TRAITER LES VALEURS CHARACTER 
+    
+    
+    # Selectionner une part d'un string
+    
+    install.packages("stringi", dep = TRUE) 
+    library(stringi)
+    
+    d1$clso <- stri_sub(d1$clso, from = 1, to = 2)
+    View(d1)
+    
+    
+    
+    #################################################################################################################
+    
+    
+    
+                      # CALCULER LES SOMMES ET LES MOYENNES SUR LES COLONNES ET SUR LIGNES
+    
+    
+    
+    # IMPORTER DES DONNEES EXCEL
+    
+    install.packages("readxl")
+    library(readxl)
+    
+    
+    gvc1 <- read_excel("C:\\Users\\gveracru\\Desktop\\R cours materiaux\\crime_recidive_prediction.xlsx", 
+                      sheet = "data3", range = "B11:O139")
+    
+    gvc2 <- gvc1
+    
+    View(gvc2)
+    
+    
+                    # FAIRE DES STATS DISCREPTIVES SUR LES COLONNES ET SUR LES LIGNES
+    
+    
+    # Il faut que ce soit des colonnes des types numeriques
+    
+    lastrow = colSums(gvc1, na.rm = TRUE) #On fait la somme sur les colonnes
+    
+    newdf1 <- rbind(gvc2, lastrow) # concatener deux dataframes par les lignes
+    
+    View(newdf)
+    
+    # Or faire comme ça
+    
+    gvc2[nrow(gvc2) + 1,] = as.list(colSums(gvc2, na.rm = TRUE))
+  
+    
+    gvc2$newrow1 <- rowSums(gvc2)       #On fait la somme sur les lignes
+    
+    lastcol = rowSums(gvc1, na.rm = TRUE) #On fait la somme sur les lignes
+    
+    newdf2 <- cbind(gvc2, lastcol) #concatener deux dataframe par les colonnes
+   
+    
+    gvc2$newrow1 <- rowMeans(gvc2, na.rm = TRUE)      #On fait la moyenne sur les lignes et on stock le resultat dans une nouvelle colonne
+    
+   
+    gvc2[nrow(gvc2) + 1,] = as.list(colMeans(gvc2, na.rm = TRUE)) #On fait la moyenne sur les colonnes et on stock le resultat dans une nouvelle ligne
+    
+    
+    
+    # Ajouter une colonne à une place précise (colonne resultat de l'adition de deux colonnes)
+    
+    dput(names(gvc2)) # pour avoir la liste des noms des colonnes
+    
+    library(tibble)
+    
+    ds5 <- add_column(gvc2, total_risque = gvc2$Risk_rsvp + gvc2$Risk_lscmi, .before = "Risk_rsvp")
+    
+    View(ds5)
+    
+    
+    # Calculer la moyenne de multiples colonnes
+    
+    
+    colMeans(gvc[sapply(gvc, is.numeric)], na.rm = TRUE) 
+    
+    
+    # Faire les stats descriptives de certaines colonnes
+    
+    library(dplyr)
+    library(tidyr)
+    
+    combDF <- select (gvc2, c("Age", "Education_level", "Risk_rsvp"))
+    
+    data_long <- gather(combDF, factor_key=TRUE)
+    
+    bt1 <- data.frame(data_long%>% group_by(key)%>%
+                        summarise(mean= mean(value), sd= sd(value), max = max(value),min = min(value)))
+    bt1
+    
+    
+    # fonction pour caluler le mode
+    
+    library(dplyr)
+    
+    # tabulate takes the integer-valued vector bin and counts the number of times each integer occurs in it.
+    
+    vect3 <- c(6, 10, 6, 7, 45, 6, 1, 10, 5, 5, 3, 6)
+    
+    Mode <- function(x) {
+      ux <- unique(x)
+      ux[which.max(tabulate(match(x, ux)))]
+    }
+    
+    Mode(vect3)
+    
+ 
+                                      # GERER LES VALEURS MANQUANTES
+      
+    
+            # VERIFIER S'IL YA DES NA
+        
+    
+    
+  # Afficher les colonnes où il y a des valeurs manquante
+    
+    
+    apply(gvc2, 2, function(x) any(is.na(x)))
+    
+# Determiner s'il y a des valeurs manquante ou infini dans une colonnes ou dans un dataframe
+    
+    any(is.na(gvc2$Cognitive_empathy))
+    
+    any(is.na(gvc2))
+    
+    colnames(gvc2)[ apply(gvc2, 2, anyNA)]
+    
+    any(is.na(gvc2$Cognitive_empathy) | is.infinite(gvc2$Cognitive_empathy))
+    
+    # creer une fonction
+    
+    indx <- apply(gvc2, 2, function(x) any(is.na(x) | is.infinite(x)))
+    colnames[indx]
+    
+    
+              # CALCULER LES PERCENTAGE DES NA
+    
+
+    # Calculer le % de NA pour tout le df
+    
+    sum(is.na(gvc2))/prod(dim(gvc2))
+    # Or
+    mean(is.na(gvc2))
+    
+    
+    # Calculer le % de NA pour tout la column
+    
+    apply(gvc2, 2, function(col)sum(is.na(col))/length(col))
+    # Or
+    colMeans(is.na(gvc2))
+    
+    # Verifier les collones sans NA
+    
+    complete.cases(gvc2)
+    
+    # ligne avec le valeur max
+    
+    library(tidyverse)
+    library(dplyr)
+    
+    gvc2 %>% slice_max(Social_desirability)
+    
+    which.max(gvc2$Risk_rsvp) # indice avec la valeur max
+    
+    gvc2[which.max(gvc2$Risk_rsvp),] # ligne avec la valeur max
+    
+    
+    # Calculer le % de NA pour la ligne 1
+    
+    rowMeans(is.na(gvc2[1,]))
+    
+    # subset les lignes remplis à plus de 80% (moins de 20% de NA)
+    
+    new_df <- gvc2[which(rowMeans(is.na(gvc2)) < 0.21),]
+    
+  
+    
+                   # REMPLACER LES VALEURS MANQUANTES PAR LA MOYENNE, LA MEDIANE, LE MODE
+    
+    
+ 
+    # Pour une seul colonne
+    
+    Column1[is.na(Column1)] <- round(mean(Column1, na.rm = TRUE))
+    
+    
+    # Faire un boucle pour remplacer les NA dans plusieurs colonnes
+    
+    for(i in 1:ncol(data)){
+      data[is.na(data[,i]), i] <- mean(data[,i], na.rm = TRUE)
+    }
+    
+    
+    # Utiliser la fonction lapply
+    
+    d1[] <- lapply(d1, function(x) { 
+      x[is.na(x)] <- mean(x, na.rm = TRUE)
+      x
+    })
+    d1
+    
+    # There is also quick solution using the imputeTS package:
+      
+    library(imputeTS)
+    na_mean(yourDataFrame)
+    
+    # Utiliser la fonction mutate_all
+    
+    
+    library(dplyr)                                                             
+    
+    set.seed(10)
+    
+    df <- data.frame(a = sample(c(NA, 1:3)    , replace = TRUE, 10),           
+                     b = sample(c(NA, 101:103), replace = TRUE, 10),                            
+                     c = sample(c(NA, 201:203), replace = TRUE, 10))                            
+    
+  
+    
+    df %>% mutate_all(~ifelse(is.na(.x), mean(.x, na.rm = TRUE), .x)) 
+    
+    
+    # Utiliser la fonction mutate_at
+    
+    df %>% mutate_at(vars(a, b),~ifelse(is.na(.x), mean(.x, na.rm = TRUE), .x))
+    
+    
+    # Uiliser la fonction replace_na
+    
+    
+    library(tidyr)
+    replace_na(mtcars,as.list(colMeans(mtcars,na.rm=T)))
+     
+    
+    # Lets say I have a dataframe , df as following -
+    df <- data.frame(a=c(2,3,4,NA,5,NA),b=c(1,2,3,4,NA,NA))
+    
+    # create a custom function
+    fillNAwithMean <- function(x){
+      na_index <- which(is.na(x))        
+      mean_x <- mean(x, na.rm=T)
+      x[na_index] <- mean_x
+      return(x)
+    }
+    
+    (df <- apply(df,2,fillNAwithMean))
+    
+    
+    
+    # Using library Zoo, it will simply replace all NA values with mean of the column values:
+      
+      library(zoo)
+    na.aggregate(data) 
+    
+    # If your df has columns that are non-numeric, this takes a little bit more work than a one-liner.
+    
+    mean_to_fill <- select_if(ungroup(df), is.numeric) %>%
+      colMeans(na.rm=T)
+    
+    
+    library(plyr)
+    
+    # Creer une fonction pour remplacer les NA
+    
+    impute.med <- function(x) replace(x, is.na(x), median(x, na.rm = TRUE))
+    
+    
+    ds3 <- sapply(ds2[, 2:6], function(x){
+      if(is.numeric(x)){
+        impute.med(x)
+      } else {
+        x
+      }
+    }
+    )
+      
+   
+    
+    # fonction pour caluler le mode
+    
+    library(dplyr)
+    
+    Mode <- function(x) {
+      ux <- unique(x)
+      ux[which.max(tabulate(match(x, ux)))]
+    }
+    
+    
+    # utiliser mutate_if pour remplacer les NA
+    
+    gvc3 <- gvc2 %>% mutate_if(is.numeric, funs(replace(.,is.na(.), mean(., na.rm = TRUE)))) %>%
+      mutate_if(is.factor, funs(replace(.,is.na(.), Mode(na.omit(.)))))
+      
+    
+    View(gvc3)
+    
+    any(is.na(gvc3))
