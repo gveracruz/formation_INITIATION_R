@@ -1,0 +1,303 @@
+
+
+Initiation à R et Rstudio # 12 : 
+Faire des tableaux croisés, calculer les moyennes, faire des analyses de corrélation et de régression.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce douzième cours, j’explique comment faire des statistiques de bases avec R : faire un tableau croisé, calculer les moyennes d’une série de variables, faire des analyses de corrélation et des analyses de régression.
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+                
+                # TABEAU CROISE, CORRELATION, REGRESSION
+
+
+#################################################################################################################
+
+
+                        # TABLEAU CROISE
+
+
+install.packages("questionr")
+library(questionr)
+
+data(hdv2003)
+
+
+d1 <- hdv2003
+
+View(d1)
+
+dim(d1)
+str(d1)
+                    
+
+
+# Avant toutes choses, un coup d'oeil à la distribution des variables, en faisant un tri-plat (tableau de fréquence)
+
+table(d1$sexe)
+
+table(d1$clso)
+
+table(d1$occup)
+
+# Voir les modalités des variables facteurs, comme par exemple :
+
+levels(d1$occup)
+
+# Recréer des variables à partir de celles existantes. Par exemple, on peut recréer d'autres variables à partir de la variable 
+# "occup", en utilisant la fonction ifelse du package dplyr.
+
+#--------------------------
+
+# The function "ifelse" returns a vector has element from x if the corresponding value of test_expression 
+# is TRUE or from y if the corresponding value of test_expression is FALSE. For instance :
+
+  #a = c(5,7,2,9)
+  #ifelse(a %% 2 == 0,"even","odd")
+#---------------------------
+
+install.packages("dplyr")
+library(dplyr) 
+
+
+d1$occup_cat <- ifelse(d1$occup == "Exerce une profession", "Travail", "Ne travail pas")
+
+# Maintenant le tableau croisé
+
+tableau <- table(d1$sexe,d1$occup_cat)
+
+print(tableau)
+
+
+# Le tableau croisé qui en ressort est plutôt fruste.
+
+# Pas de marge ! Pas de pourcentage (total, en ligne, en colonne). Bref, on regrette de prime abord la proc freq de SAS. 
+# Le fait que l'objet « tableau » que l'on vient de créer est une matrice ne rassurera pas forcément. Et pourtant ! 
+# C'est pratique. On peut faire sur cet objet toutes les manipulations matricielles : inversion, transposition, 
+# recherche des valeurs propres, etc.
+# 
+# Attribuer des marges n'est pas trop compliqué. On a la fonction addmargins.
+
+  addmargins(tableau)
+
+# Voilà qui est mieux. La fonction prop.table donne les pourcentages (globaux, en ligne ou en colonne).
+
+  #Pourcentage total
+  
+  prop.table(tableau)
+
+  #Pourcentage en ligne
+
+  prop.table(tableau,1)
+
+  #Pourcentage en colonne
+
+  prop.table(tableau,2)
+
+
+# A parir des pourcentage en ligne, on voit que 42% des hommes Ne travail, contre 51% de femmes. 
+# Mais me diriez-vous... 
+# on a les pourcentages en ligne, mais pas les marges...
+
+# Voici ce qui améliore les choses.
+
+#Pourcentage en ligne + marge
+
+addmargins(prop.table(addmargins(tableau,1),1),2)
+
+
+
+
+
+# Mais l'effectif ? On ne peut pas reconstituer le tableau !
+# Voici un tableau comme je les aime : % en ligne, la colonne avec les 100% et l'effectif pour reconstituer le tableau.
+
+tabligne=cbind(addmargins(prop.table(addmargins(tableau,1),1),2), c(margin.table(tableau,1),sum(tableau)))
+
+colnames(tabligne) <-c (colnames(tableau),"TOTAL","EFFECTIF")
+
+tabligne
+
+# Explication des fonctions utilisées :
+# - cbind() fusionne des colonnes de matrices différentes.
+# - addmargins(tableau,1) ajoute une marge pour les colonnes.
+# - c() est une liste de valeurs
+# - sum() fait la somme
+# - colnames() attribue ou manipule des noms de colonne d'un objet.
+
+# Pour les pourcentage en colonne, voici la formule
+
+
+tabcol=rbind(addmargins(prop.table(addmargins(tableau,2),2),1), c(margin.table(tableau,2),sum(tableau)))
+
+rownames(tabcol) <- c(rownames(tableau),"TOTAL","EFFECTIF")
+
+tabcol
+
+
+#################################################################################################################
+
+
+                  # CALCULER LA MOYENNE EN REGROUPANT PAR LES VALEURS D'UNE VARIABLE
+
+
+install.packages("dplyr")
+library(dplyr) 
+
+# Nous utiliserons la fonction across() pour faire des calculs sur plusieurs colonnes.
+# Utilisation:
+#   across(.cols = everything(), .fns = NULL, ..., .names = NULL)
+# 	.cols: Colonnes sur lesquelles vous voulez opérer. Vous pouvez choisir des colonnes par position, nom, fonction du nom, 
+# type ou toute combinaison de ceux-ci en utilisant des opérateurs booléens.
+# 	.fns: Fonction ou liste de fonctions à appliquer à chaque colonne.
+# 	...: Arguments supplémentaires pour les appels de fonction dans les .fns.
+# 	.names: Une spécification de la colle qui décrit comment nommer les colonnes de sortie. 
+# Il peut utiliser {col} pour le nom de la colonne sélectionnée, et {fn} pour le nom de la fonction appliquée. 
+# La valeur par défaut (NULL) est équivalente à "{col}" pour le cas d’une fonction unique 
+# et à "{col}_{fn}" pour le cas où une liste est utilisée pour .fns.
+
+
+# Charger les packages R requis library(dplyr) # Préparation des données 
+
+
+df <- as_tibble(iris) 
+
+head(df)
+
+View(df)
+
+levels(df$Species)
+
+colnames(df)
+
+# Calculer la moyenne de plusieurs colonnes
+
+levels(df$Species)
+
+moy1 <- df %>% group_by(Species) %>% summarise(across(Sepal.Length:Petal.Length, mean, na.rm= TRUE))
+
+moy1
+
+# Calculer la moyenne et le sd de toutes les colonnes numériques 
+
+moy2 <- df %>% group_by(Species) %>% summarise(across( .cols = is.numeric, .fns = list(Mean = mean, SD = sd), na.rm = TRUE, 
+                                               .names = "{col}_{fn}" ))
+
+View(moy2)
+
+
+
+#################################################################################################################
+
+
+                      #  CORRELATION
+
+
+# IMPORTER DES DONNEES EXCEL
+
+install.packages("readxl")
+library(readxl)
+
+
+gvc1 <- read_excel("C:\\Users\\gveracru\\Desktop\\R cours materiaux\\crime_recidive_prediction.xlsx", 
+                   sheet = "data3", range = "B11:O139")
+
+gvc2 <- gvc1
+
+View(gvc2)
+dim(gvc2)
+str(gvc2)
+
+# utiliser mutate_if pour remplacer les NA
+
+library(dplyr)
+
+gvc3 <- gvc2 %>% mutate_if(is.numeric, funs(replace(.,is.na(.), mean(., na.rm = TRUE)))) %>%
+  mutate_if(is.factor, funs(replace(.,is.na(.), Mode(na.omit(.)))))
+
+
+View(gvc3)
+
+any(is.na(gvc3))
+
+
+# On filtre pour choisir certaines lignes à partir d'une condition
+
+bs1 <- subset(gvc2, gvc2$Risk_rsvp > 40) 
+
+#On ne retient que les variables utiles pour l'analyse
+
+dim(bs1)
+
+bs2 <- bs1[,2:13] 
+
+#On retire les lignes pour lesquels il y a des valeurs manquantes 
+
+bs3 = na.omit(bs2) 
+
+#Deux variables à la fois.
+
+dput(names(bs3))
+
+# Trois méthodes sont disponibles: "pearson", "kendall", "spearman"
+
+cor.test(bs3$Cognitive_empathy, bs3$Age, method ="pearson")
+
+#Toutes les variables en même temps: On obtient un tableau des corrélations 
+
+cor(bs3)
+
+corrl <- data.frame(cor(bs3))
+
+View(corrl)
+
+# Faire des correlation en graphique
+
+install.packages("corrplot")
+install.packages("qgraph")
+
+library(corrplot) 
+
+library(qgraph) 
+
+#On peut obtenir des visualisation des données aisément 
+
+corrplot(cor(bs3), method="ellipse")
+
+#selectionner certaines variables pour faire un graphique de correlation 
+
+bs4 <- bs3[,6:12]
+bs5 <- bs4[, -4]
+
+qgraph(cor(bs5))
+
+
+
+#################################################################################################################
+
+
+                            # REGRESSION
+
+
+dput(names(bs3))
+
+install.packages("lm")
+library(lm)
+
+
+# Regression lineaire : un preditor et un outcome
+
+regr1 = lm(Risk_rsvp ~Age, data = bs3)
+
+summary(regr1)
+
+# Regression lineaire : deux preditors et un outcome
+
+regr2 = lm(Risk_rsvp ~Age + Education_level, data = bs3) 
+
+summary(regr2) #Review the results
+
+
+#-------------------------------------------------------------------------------------------------------------------------------------------
