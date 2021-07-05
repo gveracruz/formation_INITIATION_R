@@ -1,0 +1,167 @@
+
+
+Initiation à R et Rstudio # 13 : 
+Faire des graphiques avec R.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+
+Dans ce treizième cours, j’explique comment faire des graphiques avec certains packages R, notamment le package « ggplot2 ».
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+      # FAIRE DES GRAPHIQUES AVEC R
+
+    
+    # UN SIMPLE AVEC LA FONCTION plot() de R BASE
+
+## Utiliser la fonction plot() 
+
+plot(1:10)
+
+    # UTILISER LE PACKAGE MASS
+
+install.packages("MASS")
+library(MASS)
+
+help(package = "MASS")
+
+?pie
+
+
+## Simple Pie Chart
+
+movies <- c(4, 5, 6, 1, 4)
+
+labels <- c("Comedy", "Action", "Romance", "Drama", "Scifi")
+
+
+pie(movies, labels = labels, main = "Pie Chart of Movies")
+
+
+## Pie chart with percentage et costumized
+
+movies <- c(4, 5, 6, 1, 4)
+
+labels1 <- c("Comedy", "Action", "Romance", "Drama", "Scifi")
+
+percentage <- round(movies/sum(movies)*100)
+
+labels2 <- paste(labels1, percentage) # add percentage to labels
+
+
+labels3 <- paste(labels2, "%", sep = " ") # add % to labels
+
+
+pie(movies, labels = labels3, col = rainbow(length(labels1)), main = "Pie Chart of Movies") # avec camembert avec les couleurs de l'arc-en-ciel
+
+
+pie(movies, labels = labels3, col = c("red", "blue", "yellow", "green", "black"), main = "Pie Chart of Movies") # mettre les couleur une par une
+
+          # UTILISER LE PACKAGE PLOTRIX
+
+## 3D Exploded Pie Chart = Faire un camembert 3d
+
+install.packages("plotrix")
+library(plotrix)
+
+movies <- c(4, 5, 6, 1, 4)
+
+labels4 <- c("Comedy", "Action", "Romance", "Drama", "Scifi")
+
+pie3D(movies, labels = labels4, explode = 0.1, main = "Pie Chart of Movies")
+
+## Simple Barplot
+
+movies2 <- c(Comedy=4, Action=5, Romance=6, Drama=1, Scifi=4)
+
+### simple barplot
+barplot(movies2)
+
+### costumized barplot
+
+barplot(movies2, main = "Distribution of the Movies", xlab =  "Type of Movies", ylab = "Distribution",
+        col = c("darkblue", "red", "black", "yellow", "green"), legend = rownames(movies2))
+
+
+          # GRAPHIC AVEC GGPLOT2
+
+# importer le fichier excel
+install.packages("readxl")
+library(readxl)
+
+gf1 <- read_excel("C:\\Users\\gveracru\\Desktop\\R cours materiaux\\rheumathology_type_prediction.xlsx", 
+                  sheet = "vari", range = "C3:D22")
+
+
+View(gf1)
+
+colnames(gf1)
+row.names(gf1)
+
+# installer et charger le package ggplot2 ( pour faire les graphiques) et dplyr (pour traiter les données)
+install.packages("ggplot2")
+install.packages("dplyr")
+library(ggplot2)
+library(dplyr)
+
+help(package = "ggplot2")
+
+
+str(gf1)
+
+colnames(gf1)
+
+gf1$vari <- as.numeric(gf1$vari)
+
+class(gf1)
+
+
+# Faire un graphic, en projectant les données en ordre decroisant
+
+t1 <- ggplot(gf1) +
+  
+  #geom_point(aes(x= ruma, y = vari))
+
+  geom_point(aes(x = reorder(ruma, -vari), y = vari), stat = "identity", colour="grey", size=3)
+
+t1
+
+# Ajouté un theme spécific
+t2 <- t1 + theme_classic()
+
+t2
+
+# Ajouté un titre, et des étiquettes pour l'axe de X et l'axe de Y
+t3 <- t2 +  ggtitle("The importance of each predictor variable in the model") +
+  xlab("Predictors of rheumatic diagnosis") + 
+  ylab("Importance of each preditor variable in the model")
+
+t3
+
+# Change the ylabel and ylavel size and orientation
+t4 <- t3 + theme(axis.text.x = element_text(size=10, angle=15),
+                 axis.text.y = element_text(size=10, angle=0))
+
+t4
+
+# Change de scale graduation
+t5 <- t4 + scale_y_continuous(breaks=seq(0,11,1), limits=c(0, 11))
+
+t5
+
+# Change the xlabel margin from the plot, and the x ticks angle
+t6 <- t5 + theme(axis.title.y = element_text(margin = margin(t = 0, r = 15, b = 0, l = 0)),
+                 axis.text.x = element_text(size=10, angle=80))
+t6
+
+# Change the x ticks distance from the plot
+t7 <- t6 + theme(axis.text.x = element_text(vjust = 0.5))
+
+t7
+
+# Change  the plot margin
+t8 <- t7 + theme(plot.margin = margin(1, 1, 1, 1, "cm"))
+
+t8
