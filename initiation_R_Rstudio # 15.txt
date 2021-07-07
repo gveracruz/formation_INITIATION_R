@@ -1,0 +1,33 @@
+
+
+Initiation à R et Rstudio # 15 : 
+Mes conseils pour continuer à apprendre.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+
+Dans ce quinzième et dernier cours de cette série, je vous donne des conseils pour continuer à apprendre le langage R et à utiliser Rstudio. 
+
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+# Pour connaitre la version de R installé sur le ordinateur
+getRversion()
+
+R.Version()
+
+# Pour installer et charger un package
+
+install.packages("psych", dep = TRUE)
+
+library(psych)
+
+# Pour avoir des information sur un package ou une fonction
+
+help(package = "psych")
+
+?alpha
+
+# Pour avoir des informations sur les versions des outils utilisés dans un script R
+
+sessionInfo()
