@@ -1,0 +1,52 @@
+
+Initiation à R et Rstudio # 14 : 
+Utiliser jamovi et Rstudio en parallèle.
+
+Germano Vera Cruz, 
+Data Scientist
+Chercheur en psychologie de la santé et en psychologie sociale
+Dans ce quatorzième cours, j’explique comment utiliser le logiciel jamovi (interface clique-bouton) et Rstudio pour traiter et analyser des données.
+LE SCRIPT (copiez uniquement le script ci-dessous pour le réutiliser dans Rstudio)
+
+
+# INSTALL AND LEAD PACKAGES
+
+
+install.packages('jmv') # install jmv package
+
+library(jmv) # lead jmv pavkage
+
+install.packages("datasets")
+
+library(datasets) # load built-in dataset package
+
+help(package = "datasets")
+
+data()
+
+
+#################################################################################################################
+
+# LOAD DATA
+
+data <- iris # load iris data into "data"
+
+head(data) # check the first row of the dataset
+
+#################################################################################################################
+
+# COMANDS FROM JAMOVI ( pass above the code you have copy it from jamovi software)
+
+jmv::descriptives(
+  data = data,
+  vars = vars(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, Species),
+  box = TRUE,
+  variance = TRUE)
+
+#################################################################################################################
+
+# CLEAN UP
+# Clear environnement
+rm(list = ls())
+
+sessionInfo()
